@@ -71,9 +71,12 @@ class Bank:
         return a
 
     def transfer(self, from_acc_id, to_acc_id, amount):
-        if from_acc_id.charge(amount):
-            to_acc_id.deposit(amount)
-        pass
+        if from_acc_id in self.account_list and to_acc_id in self.account_list:
+            if from_acc_id.charge(amount):
+                to_acc_id.deposit(amount)
+        else:
+            print("Transferring via this bank is possible only for accounts managed by this bank.")
+
 
     def __repr__(self):
         return 'Bank[{},{}]'.format(self.customer_list, self.account_list)
@@ -103,6 +106,12 @@ print("\nTrying to transfer a negative value ")
 b.transfer(acc1,acc2,-1)
 print("\nTrying to charge acc1 a bigger value than its balance")
 b.transfer(acc1,acc2,1001)
+
+fake_acc1 = Account(Customer("A","A"))
+print("\nTrying to transfer from/to using unregistered account")
+b.transfer(acc1,fake_acc1,1000)
+b.transfer(fake_acc1,acc1,1000)
+
 print("\nTrying to transfer an acceptable value")
 b.transfer(acc1,acc2,500)
 
